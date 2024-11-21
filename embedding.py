@@ -26,7 +26,7 @@ class BgeM3Embedding(BaseEmbedding):
 
     @classmethod
     def class_name(cls) -> str:
-        return "bge_yx"
+        return "ollama_bge_m3"
 
     async def _aget_query_embedding(self, query: str) -> List[float]:
         return self._get_query_embedding(query)
