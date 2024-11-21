@@ -22,6 +22,10 @@ def load_huggingface_model(
 
 @dataclass
 class Reranker:
+    """Changing a rerank model requires a comprehensive testing and evalution process.
+    You need to ensure that the metrics like MRR, NGDC, ACC3, ACC5, etc. are improved or at least not degraded.
+    Conclusion: If there is already a deployed model, do not change it in any case.
+    """
 
     model_name_or_path:str = 'BAAI/bge-reranker-base'
 
