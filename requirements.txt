@@ -1,0 +1,8 @@
+torch
+transformers
+requests
+llama-index
+retry
+tqdm
+matplotlib
+langchain_text_splitters
