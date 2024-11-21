@@ -2,6 +2,7 @@ from splitters import langchain_recursive_chinese_split
 from recall_eval import evalute_recall_batch
 from model import Reranker
 from pathlib import Path
+from functools import partial
 import matplotlib.pyplot as plt
 import numpy as np
 from typing import List
@@ -28,12 +29,12 @@ def plot_output_chunk_sizes(text:str) -> None:
     plt.savefig(fp, dpi=300)
     print(f"Chunking experiment image saved at {fp}")
 
-def recall_fn(query:str) -> List[str]:
+def recall_fn(query:str, topn:int = 10) -> List[str]:
     """If used for evaluation, recall_fn has to return more than 10 chunks such that mrr@10 and ndcg@10 can be computed."""
     reranker = Reranker()
     chunks = langchain_recursive_chinese_split(text)
     scores = np.array(reranker.rerank(query, chunks))
-    sorted_chunks = np.array(chunks)[np.argsort(scores)[::-1]][:10].tolist()
+    sorted_chunks = np.array(chunks)[np.argsort(scores)[::-1]][:topn].tolist()
     return sorted_chunks
     
 def show_recalls(query:str):
@@ -47,7 +48,7 @@ if __name__ == '__main__':
     # show_recalls("钢琴的起源是怎样的？")
     scores = evalute_recall_batch(
         queries = ["钢琴的起源是怎样的？", "股票的分类是怎样的？", "介绍一下足球这项运动？"],
-        recall_fn=recall_fn
+        recall_fn=partial(recall_fn, topn=10)
     )
     
     with open(eval_save_path / 'eval_results.json', 'w') as f:
